@@ -15,7 +15,20 @@ actor BlogApp {
         isPublic: Bool;
     };
 
+    stable var stablePosts : [(Principal, Post)] = [];
+
     let posts = HashMap.HashMap<Principal, Post>(0, Principal.equal, Principal.hash);
+
+
+    system func preupgrade() {
+      stablePosts := Iter.toArray(posts.entries());
+    };
+
+    system func postupgrade() {
+      for ((p,post) in stablePosts.vals()){
+        posts.put(p,post);
+      };
+    };
 
     public shared({ caller }) func createPost(title: Text, description: Text): async Result.Result<(), Text> {
         if (title == "" or description == "") {
@@ -24,6 +37,10 @@ actor BlogApp {
 
         if (Text.size(title) > 125) {
             return #err("Title must not exceed 125 characters");
+        };
+
+        if (Principal.isAnonymous(caller)){
+            return # err("Anonymous principle cannot create post");
         };
 
         let newPost: Post = {
