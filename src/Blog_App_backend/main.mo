@@ -12,6 +12,7 @@ actor BlogApp {
         description: Text;
         upvotes: Nat;
         downvotes: Nat;
+        isPublic: Bool;
     };
 
     let posts = HashMap.HashMap<Principal, Post>(0, Principal.equal, Principal.hash);
@@ -21,11 +22,16 @@ actor BlogApp {
             return #err("Title and description must not be empty");
         };
 
+        if (Text.size(title) > 125) {
+            return #err("Title must not exceed 125 characters");
+        };
+
         let newPost: Post = {
             title = title;
             description = description;
             upvotes : Nat = 0;
             downvotes : Nat = 0;
+            isPublic = false;
         };
 
         switch (posts.get(caller)) {
@@ -33,7 +39,7 @@ actor BlogApp {
                 posts.put(caller, newPost);
                 return #ok(());
             };
-            case (?existingPost) {
+            case (?oldPost) {
                 return #err("Your principal is already associated with a post");
             };
         };
