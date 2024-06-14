@@ -19,17 +19,19 @@ actor BlogApp {
 
     let posts = HashMap.HashMap<Principal, Post>(0, Principal.equal, Principal.hash);
 
-
+    ///Function for preUpgrade
     system func preupgrade() {
       stablePosts := Iter.toArray(posts.entries());
     };
 
+    ///Function for postUpgrade
     system func postupgrade() {
       for ((p,post) in stablePosts.vals()){
         posts.put(p,post);
       };
     };
 
+    ///Function to create posts
     public shared({ caller }) func createPost(title: Text, description: Text): async Result.Result<(), Text> {
         if (title == "" or description == "") {
             return #err("Title and description must not be empty");
@@ -62,6 +64,7 @@ actor BlogApp {
         };
     };
     
+    //Function to get All Posts
     public query func getAllPosts(): async [Post] {
         let iterator = posts.vals();
         return Iter.toArray(iterator);
