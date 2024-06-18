@@ -29,7 +29,7 @@ actor BlogApp {
     /// Function to create posts
     public shared({ caller }) func createPost(title: Text, description: Text): async Result.Result<(), Text> {
         // Validate the post
-        switch (Validation.validatePost(title, description)) {
+        switch (Validation.validatePost(title, description,caller)) {
             case (#err(errorMessage)) {
                 return #err(errorMessage);
             };
@@ -38,10 +38,7 @@ actor BlogApp {
             };  
         };
 
-        if (Principal.isAnonymous(caller)) {
-            return #err("Anonymous principal cannot create post");
-        };
-
+        
         let newPost: Post = {
             title = title;
             description = description;
