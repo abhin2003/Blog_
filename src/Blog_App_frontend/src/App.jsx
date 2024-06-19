@@ -1,30 +1,60 @@
-import { useState } from 'react';
-import { Blog_App_backend } from 'declarations/Blog_App_backend';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Blog_App_backend } from '../declarations/Blog_App_backend';
+
+import Blogs from './Blogs';
+import AddBlog from './AddBlog';
 
 function App() {
-  const [greeting, setGreeting] = useState('');
+  const [blogs, setBlogs] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    const name = event.target.elements.name.value;
-    Blog_App_backend.greet(name).then((greeting) => {
-      setGreeting(greeting);
-    });
-    return false;
-  }
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const blogsArray = await Blog_App_backend.getAllPosts();
+        console.log("Blogs Array:", blogsArray);
+        setBlogs(blogsArray);
+      } catch (error) {
+        console.error('Error fetching blogs:', error);
+        setError('Error fetching blogs');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchBlogs();
+  }, []);
+
+  const handleAddBlog = async (values) => {
+    setError(null); // Reset any previous error
+    try {
+      const result = await Blog_App_backend.createPost(values.title, values.description);
+      if (result.ok) {
+        const blogsArray = await Blog_App_backend.getAllPosts();
+        setBlogs(blogsArray);
+      } else {
+        setError(result.err);
+      }
+    } catch (error) {
+      console.error('Error adding blog:', error);
+      setError('An unexpected error occurred. Please try again later.');
+    }
+  };
 
   return (
-    <main>
-      <img src="/logo2.svg" alt="DFINITY logo" />
-      <br />
-      <br />
-      <form action="#" onSubmit={handleSubmit}>
-        <label htmlFor="name">Enter your name: &nbsp;</label>
-        <input id="name" alt="Name" type="text" />
-        <button type="submit">Click Me!</button>
-      </form>
-      <section id="greeting">{greeting}</section>
-    </main>
+    <Router>
+      <main>
+        <img src="/logo2.svg" alt="DFINITY logo" style={{ marginBottom: '40px' }} />
+        {error && <div style={{ color: 'red' }}>{error}</div>}
+        <Routes>
+          <Route path="/" element={<Navigate to="/blogs" />} />
+          <Route path="/blogs" element={<Blogs blogs={blogs} isLoading={isLoading} />} />
+          <Route path="/blogs/new" element={<AddBlog handleAddBlog={handleAddBlog} />} />
+        </Routes>
+      </main>
+    </Router>
   );
 }
 
