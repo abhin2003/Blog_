@@ -1,0 +1,59 @@
+/* AddBlog.css */
+
+.add-blog-container {
+  max-width: 1200px; /* Increase the max-width */
+  margin: 0 auto;
+  background: #fff;
+  padding: 40px; /* Increase padding for more space */
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-top: 40px; /* Increase margin-top for more space */
+}
+
+.add-blog-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group {
+  margin-bottom: 30px; /* Increase space between fields */
+}
+
+label {
+  display: block;
+  margin-bottom: 10px; /* Increase space below labels */
+  font-weight: bold;
+  color: #333;
+}
+
+.input, .textarea {
+  width: 100%;
+  padding: 15px; /* Increase padding for inputs */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1.2em; /* Increase font size */
+}
+
+.textarea {
+  height: 200px; /* Increase height of textarea */
+  resize: vertical; /* Allow vertical resizing */
+}
+
+.submit-button {
+  background-color: #007bff;
+  color: white;
+  padding: 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.2em; /* Increase font size */
+}
+
+.submit-button:hover {
+  background-color: #0056b3;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
+}
