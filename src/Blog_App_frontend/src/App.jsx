@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { Blog_App_backend } from '../declarations/Blog_App_backend';
 
 import Blogs from './Blogs';
 import AddBlog from './AddBlog';
@@ -13,12 +12,11 @@ function App() {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const blogsArray = await Blog_App_backend.getAllPosts();
+        const blogsArray = await BlogApp.getAllPosts();
         console.log("Blogs Array:", blogsArray);
         setBlogs(blogsArray);
       } catch (error) {
         console.error('Error fetching blogs:', error);
-        setError('Error fetching blogs');
       } finally {
         setIsLoading(false);
       }
@@ -28,11 +26,12 @@ function App() {
   }, []);
 
   const handleAddBlog = async (values) => {
-    setError(null); // Reset any previous error
+    fetchBlogs();
+    setError(null); 
     try {
-      const result = await Blog_App_backend.createPost(values.title, values.description);
+      const result = await BlogApp.createPost(values.title, values.description);
       if (result.ok) {
-        const blogsArray = await Blog_App_backend.getAllPosts();
+        const blogsArray = await BlogApp.getAllPosts();
         setBlogs(blogsArray);
       } else {
         setError(result.err);
