@@ -16,6 +16,7 @@
     "src/Blog_App_frontend"
   ],
   "dependencies": {
+    "artemis-web3-adapter": "^1.1.2",
     "formik": "^2.4.6",
     "react-router-dom": "^6.23.1",
     "yup": "^1.4.0"
