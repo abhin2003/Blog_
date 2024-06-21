@@ -3,10 +3,11 @@
 import React from 'react';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
-import { useNavigate } from 'react-router-dom'; 
-import { Form as BootstrapForm } from 'react-bootstrap'; 
-import './AddBlog.css'; 
-import { initialValues } from './constants'; 
+import { useNavigate } from 'react-router-dom';
+import { Form as BootstrapForm } from 'react-bootstrap';
+import { useMutation, useQueryClient } from 'react-query';
+import './AddBlog.css';
+import { initialValues } from './constants';
 
 // Define the validation schema using Yup
 const addBlogSchema = Yup.object().shape({
@@ -17,7 +18,13 @@ const addBlogSchema = Yup.object().shape({
 });
 
 function AddBlog({ handleAddBlog }) {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const mutation = useMutation(handleAddBlog, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('blogs');
+    },
+  });
 
   return (
     <div className="add-blog-container">
@@ -27,11 +34,13 @@ function AddBlog({ handleAddBlog }) {
         validationSchema={addBlogSchema}
         onSubmit={async (values, { setSubmitting, resetForm }) => {
           try {
-            await handleAddBlog(values);
+            await mutation.mutateAsync(values);
             resetForm();
-            navigate('/blogs'); 
+            navigate('/blogs');
           } catch (error) {
             console.error('Error adding blog:', error);
+          } finally {
+            setSubmitting(false);
           }
         }}
       >

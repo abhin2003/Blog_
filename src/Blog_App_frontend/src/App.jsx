@@ -1,47 +1,39 @@
+// App.jsx
 
-
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-
+import { useQuery, useMutation, useQueryClient } from 'react-query';
 import Blogs from './Blogs';
 import AddBlog from './AddBlog';
 import Login from './Login';
 
+async function fetchBlogs() {
+  const response = await BlogApp.getAllPosts();
+  return response;
+}
+
+async function addBlog({ title, description }) {
+  const response = await BlogApp.createPost(title, description);
+  return response;
+}
+
 function App() {
-  const [blogs, setBlogs] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const queryClient = useQueryClient();
   const [walletAddress, setWalletAddress] = useState(null);
 
-  useEffect(() => {
-    const fetchBlogs = async () => {
-      try {
-        const blogsArray = await BlogApp.getAllPosts();
-        console.log("Blogs Array:", blogsArray);
-        setBlogs(blogsArray);
-      } catch (error) {
-        console.error('Error fetching blogs:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const { data: blogs, isLoading, error } = useQuery('blogs', fetchBlogs);
 
-    fetchBlogs();
-  }, []);
+  const mutation = useMutation(addBlog, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('blogs');
+    },
+  });
 
   const handleAddBlog = async (values) => {
-    setError(null);
     try {
-      const result = await BlogApp.createPost(values.title, values.description);
-      if (result.ok) {
-        const blogsArray = await BlogApp.getAllPosts();
-        setBlogs(blogsArray);
-      } else {
-        setError(result.err);
-      }
+      await mutation.mutateAsync(values);
     } catch (error) {
       console.error('Error adding blog:', error);
-      setError('An unexpected error occurred. Please try again later.');
     }
   };
 
@@ -49,7 +41,7 @@ function App() {
     <Router>
       <main>
         <img src="/logo2.svg" alt="DFINITY logo" style={{ marginBottom: '40px' }} />
-        {error && <div style={{ color: 'red' }}>{error}</div>}
+        {error && <div style={{ color: 'red' }}>{error.message}</div>}
         {walletAddress ? (
           <Routes>
             <Route path="/" element={<Navigate to="/blogs" />} />
