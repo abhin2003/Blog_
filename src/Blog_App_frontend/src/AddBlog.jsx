@@ -2,20 +2,11 @@
 
 import React from 'react';
 import { Formik, Form, Field } from 'formik';
-import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import { Form as BootstrapForm } from 'react-bootstrap';
 import { useMutation, useQueryClient } from 'react-query';
 import './AddBlog.css';
-import { initialValues } from './constants';
-
-// Define the validation schema using Yup
-const addBlogSchema = Yup.object().shape({
-  title: Yup.string()
-    .max(125, 'Title must not exceed 125 characters')
-    .required('Title is required'),
-  description: Yup.string().required('Description is required'),
-});
+import { initialValues, addBlogSchema } from './constants';
 
 function AddBlog({ handleAddBlog }) {
   const navigate = useNavigate();
