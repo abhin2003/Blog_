@@ -35,24 +35,24 @@
 .blogs-list {
   display: flex;
   flex-direction: column;
-  gap: 30px; /* Increase space between blog entries */
+  gap: 30px; 
 }
 
 .blog-entry {
   background: #f9f9f9;
-  padding: 30px; /* Increase padding for blog entries */
+  padding: 30px; 
   border: 1px solid #ccc;
   border-radius: 10px;
 }
 
 .blog-title {
   margin: 0;
-  font-size: 2em; /* Increase font size */
+  font-size: 2em; 
   color: #007bff;
 }
 
 .blog-description {
-  margin-top: 20px; /* Increase space below title */
-  font-size: 1.5em; /* Increase font size */
+  margin-top: 20px; 
+  font-size: 1.5em; 
   color: #333;
 }

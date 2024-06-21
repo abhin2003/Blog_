@@ -1,4 +1,4 @@
-// Login.jsx
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Artemis } from 'artemis-web3-adapter';

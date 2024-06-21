@@ -1,8 +1,8 @@
-// Blogs.jsx
+
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Blogs.css'; // Import custom CSS file for styling
+import './Blogs.css'; 
 
 function Blogs({ blogs, isLoading }) {
   const navigate = useNavigate();
