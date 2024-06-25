@@ -1,0 +1,59 @@
+
+
+.add-blog-container {
+  max-width: 1200px; 
+  margin: 0 auto;
+  background: #fff;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-top: 40px;
+}
+
+.add-blog-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group {
+  margin-bottom: 30px; 
+}
+
+label {
+  display: block;
+  margin-bottom: 10px; 
+  font-weight: bold;
+  color: #333;
+}
+
+.input, .textarea {
+  width: 100%;
+  padding: 15px; 
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1.2em; 
+}
+
+.textarea {
+  height: 200px; 
+  resize: vertical; 
+}
+
+.submit-button {
+  background-color: #007bff;
+  color: white;
+  padding: 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.2em; 
+}
+
+.submit-button:hover {
+  background-color: #0056b3;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
+}
